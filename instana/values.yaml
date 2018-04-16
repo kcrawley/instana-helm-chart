@@ -1,0 +1,19 @@
+image:
+  name: instana/agent
+  tag: latest
+  pullPolicy: Always
+
+rbac:
+  create: true
+
+service:
+  create: true
+
+instana:
+  zone: your-cluster-name
+  leaderElectorPort: 42655
+  agent:
+    #key: your-key
+    name: instana-agent
+    endpoint: saas-us-west-2.instana.io
+    port: 443
