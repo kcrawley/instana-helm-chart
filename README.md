@@ -1,55 +1,58 @@
-# Helm Chart for Instana Kubernetes
+# Instana
 
-This is a helm chart for deploying the Instana agent to a Kubernetes cluster.
+[Instana](https://www.instana.com/) is a Dynamic APM for Microservice Applications
 
-### Prerequisites
+## Introduction
 
+This chart adds the Instana Agent to all nodes in your cluster via a DaemonSet.
+
+## Prerequisites for Helm
+ 
 To use this, first install `helm` and tiller (the Kubernetes cluster-side tool helm talks to) using the standard documentation:
 
 [https://docs.helm.sh/using_helm/#installing-helm](https://docs.helm.sh/using_helm/#installing-helm)
 
-Install tiller to your cluster with `helm init`
-### Running
-
-Once helm is installed and `helm list` works (probably only shows an empty list at this point), you can install the agent via the chart:
-
-```
-helm install . --name instana-agent --namespace instana-agent --set instana.agent.key=your-key
+Install tiller to your cluster with 
+```bash 
+$ helm init
 ```
 
-The output of this command should be something like the following:
+## Installing the Chart
 
+To install the chart with the release name `instana-agent`, retrieve your instana agent key and run:
+
+```bash
+$ helm install . --name instana-agent --namespace instana-agent --set instana.agent.key=INSTANA_AGENT_KEY
 ```
-NAME:   instana-agent
-LAST DEPLOYED: Thu Apr 12 10:10:00 2018
-NAMESPACE: instana-agent
-STATUS: DEPLOYED
 
-RESOURCES:
-==> v1/ClusterRole
-NAME                  AGE
-instana-agent-reader  0s
+Sometimes it is also necessary to set instana.agent.endpoint.host and instana.agent.endpoint.port. Check the [agent backend configuration in docs](https://docs.instana.io/quick_start/agent_configuration/#backend)
 
-==> v1/ClusterRoleBinding
-NAME                          AGE
-instana-agent-reader-binding  0s
+## Uninstalling the Chart
 
-==> v1beta1/DaemonSet
-NAME           DESIRED  CURRENT  READY  UP-TO-DATE  AVAILABLE  NODE SELECTOR  AGE
-instana-agent  4        4        0      4           0          <none>         0s
+To uninstall/delete the `instana-agent` daemon set:
 
-==> v1/Pod(related)
-NAME                 READY  STATUS             RESTARTS  AGE
-instana-agent-5p5zc  0/1    ContainerCreating  0         0s
-instana-agent-dnzq4  0/1    ContainerCreating  0         0s
-instana-agent-f7sls  0/1    ContainerCreating  0         0s
-instana-agent-ldhvs  0/1    ContainerCreating  0         0s
-
-==> v1/Secret
-NAME                  TYPE    DATA  AGE
-instana-agent-secret  Opaque  1     0s
-
-==> v1/ServiceAccount
-NAME           SECRETS  AGE
-instana-agent  1        0s
+```bash
+$ helm del --purge instana-agent
 ```
+
+## Configuration
+
+### Helm Chart
+
+The following table lists the configurable parameters of the Instana chart and their default values.
+
+|             Parameter         |            Description                            |                    Default                |
+|-------------------------------|---------------------------------------------------|-------------------------------------------|
+| `instana.agent.key`           | Your Instana Agent key                            | `Nil` You must provide your own key       |
+| `image.name`                  | The image name to pull from                       | `instana/agent`                           |
+| `image.tag`                   | The image tag to pull                             | `latest`                                  |
+| `image.pullPolicy`            | Image pull policy                                 | `IfNotPresent`                            |
+| `rbac.create`                 | True/False create & use RBAC resources            | `true`                                    |
+| `instana.zone`                | Instana zone. It will be also used as cluster name| `k8s-cluster-name`                        |
+| `instana.leaderElectorPort`   | Instana leader elector sidecar port               | `42655`                                   |
+| `instana.agent.endpoint.host` | Instana agent backend endpoint host               | `saas-us-west-2.instana.io`               |
+| `instana.agent.endpoint.port` | Instana agent backend endpoint port               | `443`                                     |
+
+### Agent
+
+There is a [config map](templates/configmap.yaml) which you can edit to configure agent. This configuration will be used for all instana agents on all nodes.

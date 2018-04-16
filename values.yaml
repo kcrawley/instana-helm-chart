@@ -1,7 +1,7 @@
 image:
   name: instana/agent
   tag: latest
-  pullPolicy: Always
+  pullPolicy: IfNotPresent
 
 rbac:
   create: true
@@ -10,10 +10,11 @@ service:
   create: true
 
 instana:
-  zone: your-cluster-name
+  zone: k8s-cluster-name
   leaderElectorPort: 42655
   agent:
     #key: your-key
     name: instana-agent
-    endpoint: saas-us-west-2.instana.io
-    port: 443
+    endpoint:
+      host: saas-us-west-2.instana.io
+      port: 443

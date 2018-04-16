@@ -26,9 +26,9 @@ spec:
             - name: INSTANA_ZONE
               value: {{ .Values.instana.zone }}
             - name: INSTANA_AGENT_ENDPOINT
-              value: {{ .Values.instana.agent.endpoint }}
+              value: {{ .Values.instana.agent.endpoint.host }}
             - name: INSTANA_AGENT_ENDPOINT_PORT
-              value: "{{ .Values.instana.agent.port }}"
+              value: "{{ .Values.instana.agent.endpoint.port }}"
             - name: INSTANA_AGENT_KEY
               valueFrom:
                 secretKeyRef:
