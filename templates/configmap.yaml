@@ -36,3 +36,16 @@ data:
     #com.instana.plugin.generic.hardware:
     #  enabled: true # disabled by default
     #  availability-zone: 'zone'
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: instana-agent-configuration
+data:
+  cfg: |
+    # Internal Instana Agent configuration.
+    scheduler.threads = 4
+    http.threads = 4
+    use-cloud-provider-id = true
+    discovery.interval = 5
+    

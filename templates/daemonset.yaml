@@ -50,6 +50,9 @@ spec:
             - name: configuration
               subPath: configuration.yaml
               mountPath: /root/configuration.yaml
+            - name: agent-configuration
+              subPath: cfg
+              mountPath: /opt/instana/agent/etc/instana/com.instana.agent.main.config.Agent.cfg
           livenessProbe:
             exec:
               command:
@@ -117,5 +120,8 @@ spec:
         - name: configuration
           configMap:
             name: instana-configuration
+        - name: agent-configuration
+          configMap:
+            name: instana-agent-configuration
 {{- end -}}
 {{- end -}}
